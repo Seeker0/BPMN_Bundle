@@ -1,21 +1,32 @@
-import _ from "lodash";
-const BpmnJS = require("bpmn-js");
-let xml;
+const fs = require('fs');
+
+const BpmnJS = require('bpmn-js');
+
+let xml = fs.readFileSync(require.resolve('./ProcessFlow.bpmn'), 'utf-8');
+
 let viewer = new BpmnJS({
-  container: "body"
+  container: '#canvas'
 });
 
 viewer.importXML(xml, err => {
-  err ? console.log("error rendering", err) : console.log("rendered");
+  if (err) {
+    console.log('error rendering', err);
+  } else {
+    console.log('rendered', xml);
+  }
 });
 
-function component() {
-  let element = document.createElement("div");
+let canvas = viewer.get('canvas');
+canvas.zoom('fit-viewport');
 
-  element.innerHTML = _.join(["Hello", "webpack"], " ");
+console.log(viewer);
+
+function component() {
+  let element = document.createElement('div');
+
+  element.innerHTML = _.join(['Hello', 'webpack'], ' ');
 
   return element;
 }
 
-viewer.attachTo("body");
 document.body.appendChild(component());
