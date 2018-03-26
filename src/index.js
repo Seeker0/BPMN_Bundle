@@ -4,11 +4,15 @@ const BpmnJS = require('bpmn-js');
 
 let xml = fs.readFileSync(require.resolve('./ProcessFlow.bpmn'), 'utf-8');
 
-let viewer = new BpmnJS({
-  container: '#canvas'
-});
+let Modeler = require('bpmn-js/lib/Modeler');
+let modeler = new Modeler({ container: '#canvas' });
 
-viewer.importXML(xml, err => {
+// let modeling = modeler.get('modeling');
+// let elementsToColor = [element1, element2];
+//
+// modeling.setColor(elementsToColor, { stroke: 'green', fill: 'yellow' });
+
+modeler.importXML(xml, err => {
   if (err) {
     console.log('error rendering', err);
   } else {
@@ -16,10 +20,10 @@ viewer.importXML(xml, err => {
   }
 });
 
-let canvas = viewer.get('canvas');
+let canvas = modeler.get('canvas');
 canvas.zoom('fit-viewport');
 
-console.log(viewer);
+console.log(modeler);
 
 function component() {
   let element = document.createElement('div');
