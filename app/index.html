@@ -1,13 +1,13 @@
-<!DOCTYPE html>
 <html>
 <head>
   <title>bpmn-js modeler demo</title>
 
-  <link rel="stylesheet" href="vendor/diagram-js/diagram-js.css" />
-  <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css" />
+  <link rel="stylesheet" href="css/diagram-js.css" />
+  <link rel="stylesheet" href="css/bpmn-embedded.css" />
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
+  <div id=wrapper>
   <div class="content" id="js-drop-zone">
 
     <div class="message intro">
@@ -27,8 +27,18 @@
       </div>
     </div>
 
-    <div class="canvas" id="js-canvas"></div>
+    <div class="modeler">
+      <div class="canvas" id="js-canvas"></div>
+      <div class="properties-panel-parent" id="js-properties-panel"></div>
+    </div>
   </div>
+
+  <div id="viewables">
+    <header>Viewable Diagrams</header>
+    <a href="../resources/ProcessFlow.bpmn"><p>ProcessFlow</p></a>
+    <a href="../resources/Demo.bpmn"><p>Demo</p></a>
+  </div>
+</div>
 
   <ul class="buttons">
     <li>

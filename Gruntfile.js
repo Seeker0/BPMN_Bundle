@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = function(grunt) {
+
   require('load-grunt-tasks')(grunt);
 
   var path = require('path');
@@ -22,7 +23,9 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      src: [['<%=config.sources %>']],
+      src: [
+        ['<%=config.sources %>']
+      ],
       options: {
         jshintrc: true
       }
@@ -32,29 +35,29 @@ module.exports = function(grunt) {
       options: {
         browserifyOptions: {
           // strip unnecessary built-ins
-          builtins: ['events'],
+          builtins: [ 'events' ],
           insertGlobalVars: {
-            process: function() {
-              return 'undefined';
+            process: function () {
+                return 'undefined';
             },
-            Buffer: function() {
-              return 'undefined';
+            Buffer: function () {
+                return 'undefined';
             }
           }
         },
-        transform: ['brfs']
+        transform: [ 'brfs' ]
       },
       watch: {
         options: {
           watch: true
         },
         files: {
-          '<%= config.dist %>/index.js': ['<%= config.sources %>/**/*.js']
+          '<%= config.dist %>/index.js': [ '<%= config.sources %>/**/*.js' ]
         }
       },
       app: {
         files: {
-          '<%= config.dist %>/index.js': ['<%= config.sources %>/**/*.js']
+          '<%= config.dist %>/index.js': [ '<%= config.sources %>/**/*.js' ]
         }
       }
     },
@@ -93,9 +96,9 @@ module.exports = function(grunt) {
         livereload: true
       },
       samples: {
-        files: ['<%= config.sources %>/**/*.*'],
-        tasks: ['copy:app']
-      }
+        files: [ '<%= config.sources %>/**/*.*' ],
+        tasks: [ 'copy:app' ]
+      },
     },
     connect: {
       livereload: {
@@ -104,7 +107,9 @@ module.exports = function(grunt) {
           livereload: true,
           hostname: 'localhost',
           open: true,
-          base: ['<%= config.dist %>']
+          base: [
+            '<%= config.dist %>'
+          ]
         }
       }
     }
@@ -112,7 +117,7 @@ module.exports = function(grunt) {
 
   // tasks
 
-  grunt.registerTask('build', ['copy', 'browserify:app']);
+  grunt.registerTask('build', [ 'copy', 'browserify:app' ]);
 
   grunt.registerTask('auto-build', [
     'copy',
@@ -121,5 +126,5 @@ module.exports = function(grunt) {
     'watch'
   ]);
 
-  grunt.registerTask('default', ['jshint', 'build']);
+  grunt.registerTask('default', [ 'jshint', 'build' ]);
 };

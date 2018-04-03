@@ -93,3 +93,26 @@ a:link {
 .buttons a.active {
   opacity: 1;
 }
+
+#viewables {
+  width: 20%;
+  height: 90%;
+  flex-basis: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  border-width: 2px;
+  border-radius: 5px;
+  border-color: black;
+  background-color: gray;
+}
+
+#viewables header {
+  margin-top: 10px;
+  color: white;
+}
+
+#wrapper {
+  display: flex;
+}

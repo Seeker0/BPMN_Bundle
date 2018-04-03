@@ -1,1 +1,158 @@
-(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({},{},[]);
+'use strict';
+
+var fs = require('fs');
+
+var $ = require('jquery'),
+  BpmnModeler = require('bpmn-js/lib/Modeler');
+
+var container = $('#js-drop-zone');
+
+var canvas = $('#js-canvas');
+
+var propertiesPanelModule = require('bpmn-js-properties-panel');
+
+var propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/camunda');
+
+let Diagrams = require('../resources');
+
+var modeler = new BpmnModeler({
+  container: canvas,
+  propertiesPanel: { parent: '#js-properties-panel' },
+  additionalModules: [propertiesPanelModule, propertiesProviderModule]
+});
+
+// var newDiagramXML = fs.readFileSync(
+//   __dirname + '/../resources/newDiagram.bpmn',
+//   'utf-8'
+// );
+
+function createNewDiagram() {
+  openDiagram(Diagrams.newDiagramXML);
+}
+
+function openDiagram(xml) {
+  modeler.importXML(xml, function(err) {
+    if (err) {
+      container.removeClass('with-diagram').addClass('with-error');
+
+      container.find('.error pre').text(err.message);
+
+      console.error(err);
+    } else {
+      container.removeClass('with-error').addClass('with-diagram');
+    }
+  });
+}
+
+function saveSVG(done) {
+  modeler.saveSVG(done);
+}
+
+function saveDiagram(done) {
+  modeler.saveXML({ format: true }, function(err, xml) {
+    done(err, xml);
+  });
+}
+
+function loadDiagram(link) {
+  let xml = fs.readFileSync(__dirname + link);
+  openDiagram(xml);
+}
+
+function registerFileDrop(container, callback) {
+  function handleFileSelect(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    var files = e.dataTransfer.files;
+
+    var file = files[0];
+
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var xml = e.target.result;
+
+      callback(xml);
+    };
+
+    reader.readAsText(file);
+  }
+
+  function handleDragOver(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  }
+
+  container.get(0).addEventListener('dragover', handleDragOver, false);
+  container.get(0).addEventListener('drop', handleFileSelect, false);
+}
+
+$('a').on('click', e => {
+  e.preventDefault();
+  e.stopPropagation();
+  let xml = e.target.parentElement.href;
+  openDiagram(Diagrams[e.target.innerHTML]);
+});
+
+////// file drag / drop ///////////////////////
+
+// check file api availability
+if (!window.FileList || !window.FileReader) {
+  window.alert(
+    'Looks like you use an older browser that does not support drag and drop. ' +
+      'Try using Chrome, Firefox or the Internet Explorer > 10.'
+  );
+} else {
+  registerFileDrop(container, openDiagram);
+}
+
+// bootstrap diagram functions
+
+$(function() {
+  $('#js-create-diagram').click(function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    createNewDiagram();
+  });
+
+  var downloadLink = $('#js-download-diagram');
+  var downloadSvgLink = $('#js-download-svg');
+
+  $('.buttons a').click(function(e) {
+    if (!$(this).is('.active')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
+
+  function setEncoded(link, name, data) {
+    var encodedData = encodeURIComponent(data);
+
+    if (data) {
+      link.addClass('active').attr({
+        href: 'data:application/bpmn20-xml;charset=UTF-8,' + encodedData,
+        download: name
+      });
+    } else {
+      link.removeClass('active');
+    }
+  }
+
+  var _ = require('lodash');
+
+  var exportArtifacts = _.debounce(function() {
+    saveSVG(function(err, svg) {
+      setEncoded(downloadSvgLink, 'diagram.svg', err ? null : svg);
+    });
+
+    saveDiagram(function(err, xml) {
+      setEncoded(downloadLink, 'diagram.bpmn', err ? null : xml);
+    });
+  }, 500);
+
+  modeler.on('commandStack.changed', exportArtifacts);
+});

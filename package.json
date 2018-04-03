@@ -1,33 +1,41 @@
 {
-  "name": "km_bpmn",
-  "version": "1.0.0",
-  "description": "BPMN JS BUNDLE",
-  "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "all": "run-s bundle open",
-    "bundle": "browserify src/index.js -t brfs -o bundle.js",
-    "bundle:watch": "watchify src/index.js -t brfs -o bundle.js -v",
-    "open": "opn ./dist/index.html",
-    "dev": "npm run bundle:watch"
+  "name": "bpmn-js-example-modeler",
+  "version": "0.0.0",
+  "description": "A simple modeler built with bpmn-js",
+  "main": "app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bpmn-io/bpmn-js-examples"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "bpmnjs-example"
+  ],
+  "author": {
+    "name": "Nico Rehwaldt",
+    "url": "https://github.com/nikku"
+  },
+  "contributors": [
+    {
+      "name": "bpmn.io contributors",
+      "url": "https://github.com/bpmn-io"
+    }
+  ],
+  "license": "MIT",
   "devDependencies": {
-    "raw-loader": "^0.5.1"
+    "brfs": "^1.2.0",
+    "grunt": "~1.0.1",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-contrib-connect": "~1.0.2",
+    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-copy": "~1.0.0",
+    "load-grunt-tasks": "~3.5.0"
   },
   "dependencies": {
-    "bpmn-js": "^0.28.1",
-    "bpmn-moddle": "^3.0.0",
-    "brfs": "^1.5.0",
-    "grunt": "^1.0.2",
-    "grunt-webpack": "^3.1.1",
-    "lodash": "^4.17.5",
-    "npm": "^5.7.1",
-    "npm-run-all": "^4.1.2",
-    "opn-cli": "^3.1.0",
-    "watchify": "^3.11.0",
-    "xml-loader": "^1.2.1"
+    "bpmn-js": "^0.28.3",
+    "bpmn-js-properties-panel": "^0.22.1",
+    "diagram-js": "^0.27.2",
+    "jquery": "^3.3.1",
+    "lodash": "^3.0.0"
   }
 }
